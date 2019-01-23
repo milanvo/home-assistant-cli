@@ -58,8 +58,12 @@ def output_formats(cmd, data, output) -> None:
 
         runner = CliRunner()
         result = runner.invoke(cli.cli, cmd, catch_exceptions=False)
-        print()
+        print('--seen--')
         print(result.output)
+        print('----')
+        print('---expected---')
+        print(output)
+        print('----')
         assert result.exit_code == 0
         assert result.output == output
 
@@ -108,6 +112,26 @@ def test_entity_list_table_columns(
         ],
         basic_entities_text,
         basic_entities_table_columns_text,
+    )
+
+
+def test_entity_list_table_columns_sortby(
+    basic_entities_text, basic_entities_table_sorted_text
+) -> None:
+    """Test table columns."""
+    output_formats(
+        [
+            "--output=table",
+            (
+                '--columns=entity=attributes.friendly_name,'
+                'state=state,last_changed'
+            ),
+            "--sort-by=last_changed",
+            "entity",
+            "list",
+        ],
+        basic_entities_text,
+        basic_entities_table_sorted_text,
     )
 
 
