@@ -74,7 +74,9 @@ def restapi(
 
     try:
         if method == METH_GET:
-            return requests.get(url, params=data_str, headers=headers)
+            #return requests.get(url, params=data_str, headers=headers, verify=False)
+            return requests.get(url, params=data_str, headers=headers, verify='/home/mivo/.homeassistant/certificate.pem')
+            #return requests.get(url, params=data_str, headers=headers)
 
         return requests.request(method, url, data=data_str, headers=headers)
 
@@ -104,7 +106,7 @@ def wsapi(
     async def fetcher() -> Optional[Dict]:
         async with aiohttp.ClientSession() as session:
             async with session.ws_connect(
-                resolve_server(ctx) + "/api/websocket"
+                resolve_server(ctx) + "/api/websocket", verify_ssl=False
             ) as wsconn:
 
                 await wsconn.send_str(
